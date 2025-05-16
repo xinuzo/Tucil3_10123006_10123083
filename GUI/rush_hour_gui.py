@@ -57,13 +57,6 @@ def heuristic(board):
     exit_dist = exit_pos[1] - front - 1 if horizontal else exit_pos[0] - front - 1
     return max(0, exit_dist)
 
-def get_neighbors(state):
-    # ... (Implementasi sama seperti versi C++ diubah ke Python)
-    # Lihat kode lengkap di github repo berikut
-
-def solve(algorithm):
-    # ... (Implementasi algoritma solver sama seperti C++)
-
 class RushHourGUI:
     def __init__(self, board, solution):
         pygame.init()
