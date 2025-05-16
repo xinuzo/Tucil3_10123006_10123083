@@ -83,7 +83,7 @@ def get_neighbors(state):
                     if board[x][y] == ch:
                         cells.append((x, y))
             
-             if len(cells) < 2:  # <--- TAMBAHKAN INI
+            if len(cells) < 2:  # <--- TAMBAHKAN INI
                 continue        # <--- TAMBAHKAN INI
                 
             horizontal = cells[0][0] == cells[1][0]

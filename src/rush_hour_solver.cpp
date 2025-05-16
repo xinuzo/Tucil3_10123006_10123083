@@ -174,11 +174,12 @@ string dirWord(char d) {
 int main() {
     string path;
     cout << "Enter input file path: ";
-    cin >> path;
+    getline(cin, path); // Baca seluruh line termasuk spasi
 
     ifstream fin(path);
     if (!fin) {
         cerr << "Cannot open " << path << "\n";
+        perror("Error details");
         return 1;
     }
 
