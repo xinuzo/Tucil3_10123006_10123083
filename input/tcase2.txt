@@ -1,9 +1,10 @@
 7 8
 12
-.PAA..GG
-BPEEE...
-B..H.FL.
-CC.H.FLM
-D..IIFLM
-DJJJJ...
- K
+A.P....B
+A.PCC..B
+D....FFG
+D.HHH..G
+I..JJ..L
+I....MML
+.OO..NN.
+  K

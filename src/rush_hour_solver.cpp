@@ -173,7 +173,7 @@ string dirWord(char d) {
 
 int main() {
     string path;
-    cout << "Enter input file path: ";
+    cout << "Masukkan path file input (.txt): ";
     getline(cin, path); // Baca seluruh line termasuk spasi
 
     ifstream fin(path);
@@ -184,14 +184,15 @@ int main() {
     }
 
     fin >> A >> B >> N;
+    B=B+1;
     Board startBoard(A);
     for (int i = 0; i < A; ++i) fin >> startBoard[i];
     fin.close();
 
     // Cari posisi exit (K)
     exit_pos = {-1, -1};
-    for (int i = 0; i < A; ++i) {
-        for (int j = 0; j < B; ++j) {
+    for (int i = 0; i < A+1; ++i) {
+        for (int j = 0; j < B+1; ++j) {
             if (startBoard[i][j] == 'K') {
                 exit_pos = {i, j};
                 break;
@@ -204,9 +205,85 @@ int main() {
         cerr << "Exit (K) tidak ditemukan di papan!\n";
         return 1;
     }
+// Perbesar ukuran papan tergantung posisi K
+    if(exit_pos.first>B){
+        B=B+1;
+    }
+    else if(exit_pos.second>A){
+        A=A+1;
+    }
+
+/*
+bool valid = true;
+
+
+// 2) Validasi bahwa K berada di dinding (border)
+int ei = exit_pos.first, ej = exit_pos.second;
+bool onBorder = (ei == 0) || (ei == A-1) || (ej == 0) || (ej == B-1);
+if (!onBorder) {
+    cerr << "Error: Exit (K) harus berada di salah satu sisi papan\n";
+    valid = false;
+}
+
+// 3) Temukan primary piece ('P') sekali, dapatkan orientasi & panjang
+int pr=-1, pc=-1, plen=0;
+bool horizP=false;
+for (int i = 0; i < A && pr<0; ++i) {
+    for (int j = 0; j < B; ++j) {
+        if (startBoard[i][j] == 'P') {
+            pr = i; pc = j;
+            horizP = (j+1 < B && startBoard[i][j+1]=='P');
+            plen = 1;
+            if (horizP) {
+                while (pc+plen < B && startBoard[pr][pc+plen]=='P') ++plen;
+            } else {
+                while (pr+plen < A && startBoard[pr+plen][pc]=='P') ++plen;
+            }
+            break;
+        }
+    }
+}
+if (pr < 0) {
+    cerr << "Error: Tidak ada primary piece 'P' yang ditemukan\n";
+    return 1;
+}
+
+// 4) Pastikan hanya ada tepat satu primary piece berurutan
+int countPcells = 0;
+for (int i = 0; i < A; ++i)
+    for (int j = 0; j < B; ++j)
+        if (startBoard[i][j] == 'P')
+            ++countPcells;
+if (countPcells != plen) {
+    cerr << "Error: Harus tepat satu primary piece berurutan 'P' (panjang " 
+         << plen << " sel), tapi ditemukan " << countPcells << "\n";
+    valid = false;
+}
+
+// 5) Validasi bahwa exit sejajar dengan primary piece
+if (horizP) {
+    // primary horizontal → exit harus di baris pr
+    if (ei != pr) {
+        cerr << "Error: Exit harus sejajar horizontal pada baris " 
+             << pr << "\n";
+        valid = false;
+    }
+} else {
+    // primary vertikal → exit harus di kolom pc
+    if (ej != pc) {
+        cerr << "Error: Exit harus sejajar vertikal pada kolom " 
+             << pc << "\n";
+        valid = false;
+    }
+}
+
+if (!valid) {
+    return 1;
+}
+*/
 
     int alg;
-    cout << "Choose algorithm (1-UCS, 2-Best First Search, 3-A*): ";
+    cout << "Pilih algoritma (1: UCS, 2: Best First Search, 3: A*): ";
     cin >> alg;
 
     auto startTime = chrono::high_resolution_clock::now();
@@ -314,6 +391,6 @@ int main() {
     }
 
     auto endTime = chrono::high_resolution_clock::now();
-    cout << "Time (ms): " << chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count() << "\n";
+    cout << "Waktu (ms): " << chrono::duration_cast<chrono::milliseconds>(endTime - startTime).count() << "\n";
     return 0;
 }
