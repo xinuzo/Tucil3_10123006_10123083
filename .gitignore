@@ -1,1 +1,3 @@
 *.exe
+*-moves.txt
+.vscode
