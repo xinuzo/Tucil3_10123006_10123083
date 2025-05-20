@@ -135,7 +135,7 @@ class RushHourGUI:
                     if event.key == pygame.K_RIGHT and idx < len(self.boards)-1:
                         idx = min(len(self.boards), idx+1)
                     elif event.key == pygame.K_LEFT and idx > 0:
-                        idx = min(0, idx-1)
+                        idx = max(0, idx-1)
             
             self.draw_board(self.boards[idx])
             pygame.display.set_caption(f"Rush Hour Solver. (Move {idx+1})")
