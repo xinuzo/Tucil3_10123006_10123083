@@ -278,6 +278,16 @@ int main() {
         cout << "Tidak ada solusi ditemukan.\n";
     } else {
         Board current = startBoard;
+
+        string base_filename = path.substr(path.find_last_of("/\\") + 1);
+        string::size_type const p(base_filename.find_last_of('.'));
+        string file_without_extension = base_filename.substr(0, p);
+        ofstream move_out(file_without_extension + "-moves.txt");
+        move_out << A << ' ' << B << endl;
+        for (auto s: startBoard) {
+            move_out << s << endl;
+        }
+
         for (size_t i = 0; i < finalMoves.size(); ++i) {
             string move = finalMoves[i];
             char car = move[0];
@@ -298,6 +308,8 @@ int main() {
             }
             for (auto &row : current) cout << row << "\n";
             cout << "\n";
+
+            move_out << move << endl;
         }
     }
 
