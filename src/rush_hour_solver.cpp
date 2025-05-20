@@ -244,7 +244,7 @@ int main() {
             return (a.g + a.h) > (b.g + b.h);
         };
         priority_queue<State, vector<State>, decltype(cmp)> pq(cmp);
-        State initial{startBoard, {}, 0, heuristic(startBoard)};
+        State initial{startBoard, {}, 0, (size_t)heuristic(startBoard)};
         pq.push(initial);
         visited.insert(boardToString(startBoard));
 
