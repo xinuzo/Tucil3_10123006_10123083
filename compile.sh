@@ -1,0 +1,1 @@
+g++ src/rush_hour_solver.cpp -o bin/app.o
