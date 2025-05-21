@@ -9,6 +9,7 @@
 #include <cmath>
 #include <utility>
 #include <algorithm>
+#include <map>
 
 using namespace std;
 using Board = vector<string>;
@@ -171,6 +172,12 @@ string dirWord(char d) {
     }
 }
 
+
+void printB(Board b) {
+        for (int i = 0; i < A; i++) {
+            cout << b[i] << endl;
+        }
+    }
 int main() {
     string path;
     cout << "Masukkan path file input (.txt): ";
@@ -272,7 +279,7 @@ int main() {
         return 1;
     }
 
-    // 4) Pastikan hanya ada tepat satu primary piece
+    // Pastikan hanya ada tepat satu primary piece
     for (int i = 0; i < A; i++) {
         for (int j = 0; j < B; j++) {
             if ((verticalP && j == ej) || (!verticalP && i == ei)) continue;
@@ -281,6 +288,46 @@ int main() {
                 return 1;
             }
         }
+    }
+
+    // Cek jumlah pieces
+    int actualPieceCount = 0;
+    Board boardCopy = startBoard;
+    map<char, bool> pieces;
+
+    for (int i = 0; i < A; i++) {
+        for (int j = 0; j < B; j++) {
+            char c = boardCopy[i][j];
+            if (c == ' ' || c == '.' || c == 'K') continue;
+
+            if (pieces[c]) {
+                cout << "Found multiple of the same piece (" << c << ")";
+                return 1;
+            }
+
+            pieces[c] = true;
+            actualPieceCount++;
+            boardCopy[i][j] = ' ';
+
+            int l = 1;
+            if (boardCopy[i+1][j] == c) { // Vertical
+                while (boardCopy[i+l][j] == c) {
+                    boardCopy[i+l][j] = ' ';
+                    l++;
+                }
+            } else {
+                while (boardCopy[i][j+l] == c) {
+                    boardCopy[i][j+l] = ' ';
+                    l++;
+                }
+            }
+        }
+    }
+    printB(boardCopy);
+    cout << actualPieceCount;
+    if (actualPieceCount != N) {
+        cout << "Mismatching piece count";
+        return 1;
     }
 
     int alg;
