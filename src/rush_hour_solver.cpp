@@ -199,14 +199,14 @@ int main() {
                 A = stoi(readline.substr(0, readline.find(' ')));
                 B = stoi(readline.substr(readline.find(' ')+1));
             } catch (...) {
-                cout << "Size of board can't be read";
+                cerr << "Size of board can't be read";
                 return 1;
             }
         } else if (line == 2) {
             try {
                 N = stoi(readline);
             } catch (...) {
-                cout << "Amount of pieces can't be read";
+                cerr << "Amount of pieces can't be read";
                 return 1;
             }
 
@@ -250,7 +250,7 @@ int main() {
         for (int i = 0; i < A; i++) {
             if (foundP) {
                 if (startBoard[i][ej] == 'P' && startBoard[i-1][ej] != 'P') {
-                    cout << "Disconnected P";
+                    cerr << "Disconnected P";
                     return 1;
                 } 
             } else {
@@ -264,7 +264,7 @@ int main() {
         for (int j = 0; j < B; j++) {
             if (foundP) {
                 if (startBoard[ei][j] == 'P' && startBoard[ei][j-1] != 'P') {
-                    cout << "Disconnected P";
+                    cerr << "Disconnected P";
                     return 1;
                 } 
             } else {
@@ -275,7 +275,7 @@ int main() {
         }
     }
     if (!foundP) {
-        cout << "No P in row/column";
+        cerr << "No P in row/column";
         return 1;
     }
 
@@ -284,7 +284,7 @@ int main() {
         for (int j = 0; j < B; j++) {
             if ((verticalP && j == ej) || (!verticalP && i == ei)) continue;
             if (startBoard[i][j] == 'P') {
-                cout << "Multiple P";
+                cerr << "Multiple P";
                 return 1;
             }
         }
@@ -301,7 +301,7 @@ int main() {
             if (c == ' ' || c == '.' || c == 'K') continue;
 
             if (pieces[c]) {
-                cout << "Found multiple of the same piece (" << c << ")";
+                cerr << "Found multiple of the same piece (" << c << ")";
                 return 1;
             }
 
@@ -323,10 +323,9 @@ int main() {
             }
         }
     }
-    printB(boardCopy);
-    cout << actualPieceCount;
+    
     if (actualPieceCount != N) {
-        cout << "Mismatching piece count";
+        cerr << "Mismatching piece count";
         return 1;
     }
 
