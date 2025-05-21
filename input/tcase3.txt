@@ -4,5 +4,5 @@ A.P..B
 A.P..B
 CCD.E.
 ..D.E.
-FF..GK
+FF..G.K
 HH..G.
