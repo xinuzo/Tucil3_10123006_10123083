@@ -105,5 +105,3 @@ Waktu (ms): 26
 - Muhammad Naufal Rayhannida (10123006)  
 Kelas K1
 
----
-```
