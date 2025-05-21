@@ -1,8 +1,13 @@
-6 6
-8
-A.P..B
-A.P..B
-CCD.E.
-..D.E.
-FF..G.K
-HH..G.
+10 12 
+14
+    K
+.L.AA..BFN..
+.L.....BFN..
+.L.....B.C..
+..JJ...B.C..
+..JJ...DD...
+HHHH....GGG.
+.III........
+....MMMMM...
+....P....EE.
+....P....EE.
