@@ -176,18 +176,39 @@ int main() {
     cout << "Masukkan path file input (.txt): ";
     getline(cin, path); // Baca seluruh line termasuk spasi
 
-    ifstream fin(path);
-    if (!fin) {
+    ifstream File(path);
+    if (!File) {
         cerr << "Cannot open " << path << "\n";
         perror("Error details");
         return 1;
     }
 
-    fin >> A >> B >> N;
-    B=B+1;
-    Board startBoard(A);
-    for (int i = 0; i < A; ++i) fin >> startBoard[i];
-    fin.close();
+    Board startBoard;
+    string readline;
+    int line = 1;
+    while (getline(File, readline)) {
+        if (line == 1) {
+            try {
+                A = stoi(readline.substr(0, readline.find(' ')));
+                B = stoi(readline.substr(readline.find(' ')+1));
+            } catch (...) {
+                cout << "Size of board can't be read";
+                return 1;
+            }
+        } else if (line == 2) {
+            try {
+                N = stoi(readline);
+            } catch (...) {
+                cout << "Amount of pieces can't be read";
+                return 1;
+            }
+
+        } else {
+            startBoard.push_back(readline);
+        }
+        line++;
+    }
+    File.close();
 
     // Cari posisi exit (K)
     exit_pos = {-1, -1};
@@ -205,82 +226,62 @@ int main() {
         cerr << "Exit (K) tidak ditemukan di papan!\n";
         return 1;
     }
-// Perbesar ukuran papan tergantung posisi K
-    if(exit_pos.first>B){
-        B=B+1;
+
+    // Validasi bahwa K berada di border
+    int ei = exit_pos.first, ej = exit_pos.second;
+    bool onBorder = (ei == 0) || (ei == A) || (ej == 0) || (ej == B);
+    bool verticalP  = (ei == 0) || (ei == A);
+
+    if (!onBorder) {
+        cerr << "Error: Exit (K) harus berada di salah satu sisi papan\n";
+        return 1;
     }
-    else if(exit_pos.second>A){
-        A=A+1;
-    }
 
-/*
-bool valid = true;
-
-
-// 2) Validasi bahwa K berada di dinding (border)
-int ei = exit_pos.first, ej = exit_pos.second;
-bool onBorder = (ei == 0) || (ei == A-1) || (ej == 0) || (ej == B-1);
-if (!onBorder) {
-    cerr << "Error: Exit (K) harus berada di salah satu sisi papan\n";
-    valid = false;
-}
-
-// 3) Temukan primary piece ('P') sekali, dapatkan orientasi & panjang
-int pr=-1, pc=-1, plen=0;
-bool horizP=false;
-for (int i = 0; i < A && pr<0; ++i) {
-    for (int j = 0; j < B; ++j) {
-        if (startBoard[i][j] == 'P') {
-            pr = i; pc = j;
-            horizP = (j+1 < B && startBoard[i][j+1]=='P');
-            plen = 1;
-            if (horizP) {
-                while (pc+plen < B && startBoard[pr][pc+plen]=='P') ++plen;
+    // Cek primary piece ('P') ada pada row/kolom yang sama dengan exit piece
+    bool foundP;
+    if (verticalP) {
+        for (int i = 0; i < A; i++) {
+            if (foundP) {
+                if (startBoard[i][ej] == 'P' && startBoard[i-1][ej] != 'P') {
+                    cout << "Disconnected P";
+                    return 1;
+                } 
             } else {
-                while (pr+plen < A && startBoard[pr+plen][pc]=='P') ++plen;
+                if (startBoard[i][ej] == 'P') {
+                    foundP = true;
+                }
             }
-            break;
         }
     }
-}
-if (pr < 0) {
-    cerr << "Error: Tidak ada primary piece 'P' yang ditemukan\n";
-    return 1;
-}
-
-// 4) Pastikan hanya ada tepat satu primary piece berurutan
-int countPcells = 0;
-for (int i = 0; i < A; ++i)
-    for (int j = 0; j < B; ++j)
-        if (startBoard[i][j] == 'P')
-            ++countPcells;
-if (countPcells != plen) {
-    cerr << "Error: Harus tepat satu primary piece berurutan 'P' (panjang " 
-         << plen << " sel), tapi ditemukan " << countPcells << "\n";
-    valid = false;
-}
-
-// 5) Validasi bahwa exit sejajar dengan primary piece
-if (horizP) {
-    // primary horizontal → exit harus di baris pr
-    if (ei != pr) {
-        cerr << "Error: Exit harus sejajar horizontal pada baris " 
-             << pr << "\n";
-        valid = false;
+    else {
+        for (int j = 0; j < B; j++) {
+            if (foundP) {
+                if (startBoard[ei][j] == 'P' && startBoard[ei][j-1] != 'P') {
+                    cout << "Disconnected P";
+                    return 1;
+                } 
+            } else {
+                if (startBoard[ei][j] == 'P') {
+                    foundP = true;
+                }
+            }
+        }
     }
-} else {
-    // primary vertikal → exit harus di kolom pc
-    if (ej != pc) {
-        cerr << "Error: Exit harus sejajar vertikal pada kolom " 
-             << pc << "\n";
-        valid = false;
+    if (!foundP) {
+        cout << "No P in row/column";
+        return 1;
     }
-}
 
-if (!valid) {
-    return 1;
-}
-*/
+    // 4) Pastikan hanya ada tepat satu primary piece
+    for (int i = 0; i < A; i++) {
+        for (int j = 0; j < B; j++) {
+            if ((verticalP && j == ej) || (!verticalP && i == ei)) continue;
+            if (startBoard[i][j] == 'P') {
+                cout << "Multiple P";
+                return 1;
+            }
+        }
+    }
 
     int alg;
     cout << "Pilih algoritma (1: UCS, 2: Best First Search, 3: A*): ";
