@@ -174,10 +174,11 @@ string dirWord(char d) {
 
 
 void printB(Board b) {
-        for (int i = 0; i < A; i++) {
-            cout << b[i] << endl;
-        }
+    for (string s : b) {
+        cout << s << endl;
     }
+}
+
 int main() {
     string path;
     cout << "Masukkan path file input (.txt): ";
@@ -242,6 +243,20 @@ int main() {
     if (!onBorder) {
         cerr << "Error: Exit (K) harus berada di salah satu sisi papan\n";
         return 1;
+    }
+
+    // Flip board if K on top or left
+    bool flipH, flipV;
+    if (ej == 0) {
+        for (string& s : startBoard) {
+            reverse(s.begin(), s.end());
+        }
+        flipH = true;
+        exit_pos.second = B;
+    } else if (ei == 0) {
+        reverse(startBoard.begin(), startBoard.end());
+        flipV = true;
+        exit_pos.first = A;
     }
 
     // Cek primary piece ('P') ada pada row/kolom yang sama dengan exit piece
@@ -323,7 +338,7 @@ int main() {
             }
         }
     }
-    
+
     if (actualPieceCount != N) {
         cerr << "Mismatching piece count";
         return 1;
@@ -394,6 +409,31 @@ int main() {
     }
 
     // Output hasil
+
+    // if flipped, reflip moves and board
+    if (flipH) {
+        for (string& move : finalMoves) {
+            if (move[2] == 'L') {
+                move[2] = 'R';
+            } else if (move[2] == 'R') {
+                move[2] = 'L';
+            }
+        }
+
+        for (string& s : startBoard) {
+            reverse(s.begin(), s.end());
+        }
+    } else if (flipV) {
+        for (string& move : finalMoves) {
+            if (move[2] == 'U') {
+                move[2] = 'D';
+            } else if (move[2] == 'D') {
+                move[2] = 'U';
+            }
+        }
+        reverse(startBoard.begin(), startBoard.end());
+    }
+
     cout << "Papan Awal\n";
     for (auto &row : startBoard) cout << row << "\n";
     cout << "\n";
