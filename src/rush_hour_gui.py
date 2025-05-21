@@ -30,7 +30,7 @@ def read_input(path):
         for _ in range(Y):
             line = f.readline().strip('\n')
             start_board.append(list(line))
-        
+
         # Cari K
         for i in range(len(start_board)):
             for j in range(len(start_board[i])):
@@ -39,13 +39,24 @@ def read_input(path):
                     break
             if exit_pos:
                 break
+        
+        # No K = K next line
+        if exit_pos is None:
+            start_board.append(list(f.readline().strip('\n')))
+            i = len(start_board)-1
+            for j in range(len(start_board[i])):
+                if start_board[i][j] == 'K':
+                    exit_pos = (i, j)
+                    break
+
 
         Y = max(exit_pos[0]+1, Y)
         X = max(exit_pos[1]+1, X)
 
         for i in range(len(start_board)):
             if len(start_board[i]) < X:
-                start_board[i].append(' ')
+                for _ in range(len(start_board[i]), X):
+                    start_board[i].append(' ')
     
         for line in f:
             moves.append(line)

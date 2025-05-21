@@ -246,7 +246,8 @@ int main() {
     }
 
     // Flip board if K on top or left
-    bool flipH, flipV;
+    bool flipH = false;
+    bool flipV = false;
     if (ej == 0) {
         for (string& s : startBoard) {
             reverse(s.begin(), s.end());
