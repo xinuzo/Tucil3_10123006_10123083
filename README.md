@@ -62,6 +62,7 @@ GPPCDFK
 GH.III
 GHJ...
 LLJMM.
+
 Gerakan 1: I-kiri
 AAB..F
 ..BCDF
@@ -69,6 +70,7 @@ GPPCDFK
 GHIII.
 GHJ...
 LLJMM.
+
 Gerakan 2: F-bawah
 AAB...
 ..BCD.
@@ -76,6 +78,7 @@ GPPCD.K
 GHIIIF
 GHJ..F
 LLJMMF
+
 Gerakan 3: D-atas
 AAB.D.
 ..BCD.
@@ -83,6 +86,7 @@ GPPC..K
 GHIIIF
 GHJ..F
 LLJMMF
+
 Gerakan 4: C-atas
 AABCD.
 ..BCD.
@@ -90,6 +94,7 @@ GPP...K
 GHIIIF
 GHJ..F
 LLJMMF
+
 Gerakan 5: P-kanan
 AABCD.
 ..BCD.
