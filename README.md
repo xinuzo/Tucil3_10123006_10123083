@@ -105,7 +105,7 @@ LLJMMF
 Waktu (ms): 26
 ```
 
-## Pembuat
+## Author
 - Rendi Adinata (10123083)
 - Muhammad Naufal Rayhannida (10123006)  
 Kelas K1
