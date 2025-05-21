@@ -24,37 +24,33 @@ def read_input(path):
     exit_pos = None
     moves = []
     with open(path) as f:
-        # Read dimensions
         Y, X = map(int, f.readline().split())
-        # Peek next line to check for a count line and read board lines accordingly
-        peek = f.readline().rstrip('\n')
-        try:
-            # If it's an integer (e.g., number of pieces), skip it
-            _ = int(peek.strip())
-            lines = [f.readline().rstrip('\n') for _ in range(Y)]
-        except ValueError:
-            # The peek line is part of the board
-            lines = [peek] + [f.readline().rstrip('\n') for _ in range(Y-1)]
-
-        # Build the start board, padding or truncating each line to width X
+        
         start_board = []
-        for line in lines:
-            row = list(line.ljust(X, '.')[:X])
-            start_board.append(row)
-
-        # Find the exit position marked by 'K'
-        for i in range(Y):
-            for j in range(X):
+        for _ in range(Y):
+            line = f.readline().strip('\n')
+            start_board.append(list(line))
+        
+        # Cari K
+        for i in range(len(start_board)):
+            for j in range(len(start_board[i])):
                 if start_board[i][j] == 'K':
                     exit_pos = (i, j)
                     break
             if exit_pos:
                 break
 
-        # Read remaining lines as moves
-        for line in f:
-            moves.append(line.strip())
+        Y = max(exit_pos[0]+1, Y)
+        X = max(exit_pos[1]+1, X)
 
+        for i in range(len(start_board)):
+            if len(start_board[i]) < X:
+                start_board[i].append(' ')
+    
+        for line in f:
+            moves.append(line)
+    
+    
     return start_board, Y, X, exit_pos, moves
 
 def do_move(current, move, Y, X):
@@ -68,12 +64,13 @@ def do_move(current, move, Y, X):
                     while current[i+piece_len][j] == move[0]:
                         new_board[i+piece_len][j] = '.'
                         piece_len += 1
+                        if i+piece_len >= Y: break
                     
                     # Get how far the piece needs to move
                     piece_move_dist = -1 if move[2] == 'U' else piece_len
                     while current[i+piece_move_dist][j] == '.':
                         piece_move_dist += -1 if move[2] == 'U' else 1
-                        if not (i+piece_move_dist > 0 and i+piece_move_dist < Y): break
+                        if not (i+piece_move_dist >= 0 and i+piece_move_dist < Y): break
                     piece_move_dist -= -1 if move[2] == 'U' else 1
                     
                     # Apply move
@@ -84,19 +81,19 @@ def do_move(current, move, Y, X):
                     while current[i][j+piece_len] == move[0]:
                         new_board[i][j+piece_len] = '.'
                         piece_len += 1
+                        if j+piece_len >= X: break
 
                     # Get how far the piece needs to move
                     piece_move_dist = -1 if move[2] == 'L' else piece_len
                     while current[i][j+piece_move_dist] == '.':
                         piece_move_dist += -1 if move[2] == 'L' else 1
-                        if not (j+piece_move_dist > 0 and j+piece_move_dist < X): break
+                        if not (j+piece_move_dist >= 0 and j+piece_move_dist < X): break
                     piece_move_dist -= -1 if move[2] == 'L' else 1
                     
                     # Apply move
                     for p in range(piece_len):
                         new_board[i][j + piece_move_dist + p*(1 if move[2] == 'L' else -1)] = move[0]
                     return new_board
-
 class RushHourGUI:
     def __init__(self, board, Y, X, exit_pos, moves):
         pygame.init()
@@ -121,6 +118,7 @@ class RushHourGUI:
             current = new
             self.boards.append(new)
 
+    
     def draw_board(self, board):
         for i in range(self.Y):
             for j in range(self.X):
@@ -133,10 +131,9 @@ class RushHourGUI:
                         (j*CELL_SIZE + 20, i*CELL_SIZE + 20))
         
         # Gambar exit
-        if self.exit_pos:
-            pygame.draw.rect(self.screen, (0,255,0),
-                (self.exit_pos[1]*CELL_SIZE, self.exit_pos[0]*CELL_SIZE, CELL_SIZE, 5))
-
+        pygame.draw.rect(self.screen, (0,255,0),
+            (self.exit_pos[1]*CELL_SIZE, self.exit_pos[0]*CELL_SIZE, CELL_SIZE, 5))
+    
     def run(self):
         idx = 0
         while self.running:
@@ -158,7 +155,7 @@ class RushHourGUI:
         pygame.quit()
 
 if __name__ == "__main__":
-    path = input("Masukkan path file input: ")
+    path = input("Enter input file path: ")
     start_board, Y, X, exit_pos, moves = read_input(path)
 
     gui = RushHourGUI(start_board, Y, X, exit_pos, moves)
